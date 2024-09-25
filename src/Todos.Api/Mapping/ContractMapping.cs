@@ -20,7 +20,8 @@ public static class ContractMapping
         return new Todo
         {
             Id = id,
-            Description = request.Description
+            Description = request.Description,
+            CompletedOn = request.CompletedOn
         };
     }
 
@@ -29,7 +30,9 @@ public static class ContractMapping
         return new TodoResponse
         {
             Id = todo.Id,
-            Description = todo.Description
+            Description = todo.Description,
+            CompletedOn = todo.CompletedOn,
+            Completed = todo.Completed
         };
     }
 
