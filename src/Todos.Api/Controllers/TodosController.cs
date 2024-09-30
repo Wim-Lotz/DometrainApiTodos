@@ -17,18 +17,17 @@ public class TodosController : ControllerBase
     }
 
     [HttpPost(ApiEndpoints.Todos.Create)]
-    public async Task<IActionResult> Create([FromBody] CreateTodoRequest request)
+    public async Task<IActionResult> Create([FromBody] CreateTodoRequest request, CancellationToken token)
     {
         var todo = request.MapToTodo();
-        await _todoService.CreateAsync(todo);
-        var todoResponse = todo.MapToResponse();
-        return CreatedAtAction(nameof(Get), new { id = todo.Id }, todoResponse);
+        await _todoService.CreateAsync(todo, token);
+        return CreatedAtAction(nameof(Get), new { id = todo.Id }, todo);
     }
 
     [HttpGet(ApiEndpoints.Todos.Get)]
-    public async Task<IActionResult> Get([FromRoute] Guid id)
+    public async Task<IActionResult> Get([FromRoute] Guid id, CancellationToken token)
     {
-        var todo = await _todoService.GetByIdAsync(id);
+        var todo = await _todoService.GetByIdAsync(id, token);
         if (todo is null)
         {
             return NotFound();
@@ -39,19 +38,20 @@ public class TodosController : ControllerBase
     }
 
     [HttpGet(ApiEndpoints.Todos.GetAll)]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(CancellationToken token)
     {
-        var todos = await _todoService.GetAllAsync();
+        var todos = await _todoService.GetAllAsync(token);
 
         var response = todos.MapToResponse();
         return Ok(response);
     }
 
     [HttpPut(ApiEndpoints.Todos.Update)]
-    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateTodoRequest request)
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateTodoRequest request, 
+        CancellationToken token)
     {
         var todo = request.MapToTodo(id);
-        var updatedTodo = await _todoService.UpdateAsync(todo);
+        var updatedTodo = await _todoService.UpdateAsync(todo, token);
         if (updatedTodo is null)
         {
             return NotFound();
@@ -62,9 +62,9 @@ public class TodosController : ControllerBase
     }
 
     [HttpDelete(ApiEndpoints.Todos.Delete)]
-    public async Task<IActionResult> Delete([FromRoute] Guid id)
+    public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken token)
     {
-        var deleted = await _todoService.DeleteByIdAsync(id);
+        var deleted = await _todoService.DeleteByIdAsync(id, token);
         if (!deleted)
         {
             return NotFound();

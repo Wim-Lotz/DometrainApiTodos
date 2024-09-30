@@ -17,36 +17,36 @@ public sealed class TodoService : ITodoService
         _todoValidator = todoValidator;
     }
 
-    public async Task<bool> CreateAsync(Todo todo)
+    public async Task<bool> CreateAsync(Todo todo, CancellationToken token = default)
     {
-        await _todoValidator.ValidateAndThrowAsync(todo);
-        return await _todoRepository.CreateAsync(todo);
+        await _todoValidator.ValidateAndThrowAsync(todo, cancellationToken: token);
+        return await _todoRepository.CreateAsync(todo, token);
     }
 
-    public Task<Todo?> GetByIdAsync(Guid id)
+    public Task<Todo?> GetByIdAsync(Guid id, CancellationToken token = default)
     {
-        return _todoRepository.GetByIdAsync(id);
+        return _todoRepository.GetByIdAsync(id, token);
     }
 
-    public Task<IEnumerable<Todo>> GetAllAsync()
+    public Task<IEnumerable<Todo>> GetAllAsync(CancellationToken token = default)
     {
-        return _todoRepository.GetAllAsync();
+        return _todoRepository.GetAllAsync(token);
     }
 
-    public async Task<Todo?> UpdateAsync(Todo todo)
+    public async Task<Todo?> UpdateAsync(Todo todo, CancellationToken token = default)
     {
-        await _todoValidator.ValidateAndThrowAsync(todo);
+        await _todoValidator.ValidateAndThrowAsync(todo, cancellationToken: token);
         
-        var todoExists = await _todoRepository.ExistsByIdAsync(todo.Id);
+        var todoExists = await _todoRepository.ExistsByIdAsync(todo.Id, token);
 
         if (!todoExists)
             return null;
-        await _todoRepository.UpdateAsync(todo);
+        await _todoRepository.UpdateAsync(todo, token);
         return todo;
     }
 
-    public Task<bool> DeleteByIdAsync(Guid id)
+    public Task<bool> DeleteByIdAsync(Guid id, CancellationToken token = default)
     {
-        return _todoRepository.DeleteByIdAsync(id);
+        return _todoRepository.DeleteByIdAsync(id, token);
     }
 }

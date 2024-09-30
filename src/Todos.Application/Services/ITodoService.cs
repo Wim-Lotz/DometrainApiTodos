@@ -4,13 +4,13 @@ namespace Todos.Application.Services;
 
 public interface ITodoService
 {
-    Task<bool> CreateAsync(Todo todo);
+    Task<bool> CreateAsync(Todo todo, CancellationToken token = default);
     
-    Task<Todo?> GetByIdAsync(Guid id);
+    Task<Todo?> GetByIdAsync(Guid id, CancellationToken token = default);
     
-    Task<IEnumerable<Todo>> GetAllAsync();
+    Task<IEnumerable<Todo>> GetAllAsync(CancellationToken token = default);
     
-    Task<Todo?> UpdateAsync(Todo todo);
+    Task<Todo?> UpdateAsync(Todo todo, CancellationToken token = default);
     
-    Task<bool> DeleteByIdAsync(Guid id);
+    Task<bool> DeleteByIdAsync(Guid id, CancellationToken token = default);
 }
