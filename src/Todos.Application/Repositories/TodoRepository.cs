@@ -1,44 +1,90 @@
-﻿using Todos.Application.Models;
+﻿using Dapper;
+using Todos.Application.Database;
+using Todos.Application.Models;
 
 namespace Todos.Application.Repositories;
 
 public class TodoRepository : ITodoRepository
 {
-    private readonly List<Todo> _todos = [];
-    
-    public Task<bool> CreateAsync(Todo todo)
+    private readonly IDbConnectionFactory _dbConnectionFactory;
+
+    public TodoRepository(IDbConnectionFactory dbConnectionFactory)
     {
-        _todos.Add(todo);
-        return Task.FromResult(true);
+        _dbConnectionFactory = dbConnectionFactory;
     }
 
-    public Task<Todo?> GetByIdAsync(Guid id)
+    public async Task<bool> CreateAsync(Todo todo)
     {
-        var todo = _todos.SingleOrDefault(x => x.Id == id);
-        return Task.FromResult(todo);
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+
+        var result = await connection.ExecuteAsync(
+            new CommandDefinition($"""
+                                   insert into todos (id, description)
+                                   values (@Id, @Description)
+                                   """, todo));
+
+        return result > 0;
     }
 
-    public Task<IEnumerable<Todo>> GetAllAsync()
+    public async Task<Todo?> GetByIdAsync(Guid id)
     {
-        return Task.FromResult(_todos.AsEnumerable());
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+
+        var todo = await connection.QuerySingleOrDefaultAsync<Todo>(
+            new CommandDefinition($"""
+                                   select * from todos where id = @id
+                                   """, new { id }));
+        return todo ?? null;
     }
 
-    public Task<bool> UpdateAsync(Todo todo)
+    public async Task<IEnumerable<Todo>> GetAllAsync()
     {
-        var todoIndex = _todos.FindIndex(x => x.Id == todo.Id);
-        if (todoIndex == -1)
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+        
+        var result = await connection.QueryAsync<Todo>(
+            new CommandDefinition($"""
+                                   select * from todos
+                                   """));
+
+        return result.Select(t => new Todo
         {
-            return Task.FromResult(false);
-        }
-
-        _todos[todoIndex] = todo;
-        return Task.FromResult(true);
+            Id = t.Id,
+            Description = t.Description,
+            CompletedOn = t.CompletedOn
+        });
     }
 
-    public Task<bool> DeleteByIdAsync(Guid id)
+    public async Task<bool> UpdateAsync(Todo todo)
     {
-        var removedCount = _todos.RemoveAll(x => x.Id == id);
-        var todoRemoved = removedCount > 0; 
-        return Task.FromResult(todoRemoved);
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+
+        var result = await connection.ExecuteAsync(
+            new CommandDefinition($"""
+                                   update todos set description = @Description, completedOn = @CompletedOn, completed = @Completed
+                                   where id = @Id
+                                   """, todo));
+        
+        return result > 0;
+    }
+
+    public async Task<bool> DeleteByIdAsync(Guid id)
+    {
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+        
+        var result = await connection.ExecuteAsync(
+            new CommandDefinition($"""
+                                   delete from todos where id = @id
+                                   """, new { id }));
+        return result > 0;
+    }
+
+    public async Task<bool> ExistsByIdAsync(Guid id)
+    {
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+        
+        return await connection.ExecuteScalarAsync<bool>(
+            new CommandDefinition($"""
+                                   select count(1) from todos where id = @id
+                                   """, new { id }));
     }
 }

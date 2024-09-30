@@ -1,8 +1,8 @@
 ﻿using Todos.Application.Models;
 
-namespace Todos.Application.Repositories;
+namespace Todos.Application.Services;
 
-public interface ITodoRepository
+public interface ITodoService
 {
     Task<bool> CreateAsync(Todo todo);
     
@@ -10,8 +10,7 @@ public interface ITodoRepository
     
     Task<IEnumerable<Todo>> GetAllAsync();
     
-    Task<bool> UpdateAsync(Todo todo);
+    Task<Todo?> UpdateAsync(Todo todo);
     
     Task<bool> DeleteByIdAsync(Guid id);
-    Task<bool> ExistsByIdAsync(Guid id);
 }
