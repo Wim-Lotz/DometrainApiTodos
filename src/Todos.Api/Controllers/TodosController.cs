@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Todos.Api.Mapping;
-using Todos.Application.Repositories;
 using Todos.Application.Services;
 using Todos.Contracts.Requests;
 
@@ -16,6 +16,7 @@ public class TodosController : ControllerBase
         _todoService = todoService;
     }
 
+    [Authorize(AuthConstants.TrustedMemberPolicyName)]
     [HttpPost(ApiEndpoints.Todos.Create)]
     public async Task<IActionResult> Create([FromBody] CreateTodoRequest request, CancellationToken token)
     {
@@ -46,6 +47,7 @@ public class TodosController : ControllerBase
         return Ok(response);
     }
 
+    [Authorize(AuthConstants.TrustedMemberPolicyName)]
     [HttpPut(ApiEndpoints.Todos.Update)]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateTodoRequest request, 
         CancellationToken token)
@@ -61,6 +63,7 @@ public class TodosController : ControllerBase
         return Ok(response);
     }
 
+    [Authorize(AuthConstants.AdminUserPolicyName)]
     [HttpDelete(ApiEndpoints.Todos.Delete)]
     public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken token)
     {
