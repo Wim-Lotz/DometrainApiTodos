@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
 using Todos.Api;
+using Todos.Api.Auth;
 using Todos.Api.Mapping;
 using Todos.Application;
 using Todos.Application.Database;

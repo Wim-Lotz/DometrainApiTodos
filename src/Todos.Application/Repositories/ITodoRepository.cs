@@ -9,6 +9,7 @@ public interface ITodoRepository
     Task<Todo?> GetByIdAsync(Guid id, CancellationToken token = default);
     
     Task<IEnumerable<Todo>> GetAllAsync(CancellationToken token = default);
+    Task<IEnumerable<Todo>> GetAllMineAsync(Guid? userId = default, CancellationToken token = default);
     
     Task<bool> UpdateAsync(Todo todo, CancellationToken token = default);
     

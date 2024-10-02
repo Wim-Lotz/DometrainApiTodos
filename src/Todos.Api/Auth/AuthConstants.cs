@@ -1,4 +1,4 @@
-﻿namespace Todos.Api;
+﻿namespace Todos.Api.Auth;
 
 public static class AuthConstants
 {

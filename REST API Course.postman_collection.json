@@ -334,6 +334,46 @@
 				{
 					"name": "Get All Todos",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2N2MwZDNkMi0zZTc4LTRjN2MtOGQ1My03YTM2NTM5NjJjNTgiLCJzdWIiOiJ3aW1Ad2ltLmNvbSIsImVtYWlsIjoid2ltQHdpbS5jb20iLCJ1c2VyaWQiOiJkODU2NmRlMy1iMWE2LTRhOWItYjg0Mi04ZTM4ODdhODJlNDEiLCJhZG1pbiI6dHJ1ZSwidHJ1c3RlZF9tZW1iZXIiOnRydWUsIm5iZiI6MTcyNzc5NTAxNCwiZXhwIjoxNzI3ODIzODE0LCJpYXQiOjE3Mjc3OTUwMTQsImlzcyI6Imh0dHBzOi8vaWQud2ltLmNvbSIsImF1ZCI6Imh0dHBzOi8vdG9kb3Mud2ltLmNvbSJ9.n5JLDQ0DA43Q4tkOIhPRVDmzQDDWVotignoYtveGOUA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7078/api/todos",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7078",
+							"path": [
+								"api",
+								"todos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All My Todos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2N2MwZDNkMi0zZTc4LTRjN2MtOGQ1My03YTM2NTM5NjJjNTgiLCJzdWIiOiJ3aW1Ad2ltLmNvbSIsImVtYWlsIjoid2ltQHdpbS5jb20iLCJ1c2VyaWQiOiJkODU2NmRlMy1iMWE2LTRhOWItYjg0Mi04ZTM4ODdhODJlNDEiLCJhZG1pbiI6dHJ1ZSwidHJ1c3RlZF9tZW1iZXIiOnRydWUsIm5iZiI6MTcyNzc5NTAxNCwiZXhwIjoxNzI3ODIzODE0LCJpYXQiOjE3Mjc3OTUwMTQsImlzcyI6Imh0dHBzOi8vaWQud2ltLmNvbSIsImF1ZCI6Imh0dHBzOi8vdG9kb3Mud2ltLmNvbSJ9.n5JLDQ0DA43Q4tkOIhPRVDmzQDDWVotignoYtveGOUA",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -403,6 +443,38 @@
 					"response": []
 				}
 			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2N2MwZDNkMi0zZTc4LTRjN2MtOGQ1My03YTM2NTM5NjJjNTgiLCJzdWIiOiJ3aW1Ad2ltLmNvbSIsImVtYWlsIjoid2ltQHdpbS5jb20iLCJ1c2VyaWQiOiJkODU2NmRlMy1iMWE2LTRhOWItYjg0Mi04ZTM4ODdhODJlNDEiLCJhZG1pbiI6dHJ1ZSwidHJ1c3RlZF9tZW1iZXIiOnRydWUsIm5iZiI6MTcyNzc5NTAxNCwiZXhwIjoxNzI3ODIzODE0LCJpYXQiOjE3Mjc3OTUwMTQsImlzcyI6Imh0dHBzOi8vaWQud2ltLmNvbSIsImF1ZCI6Imh0dHBzOi8vdG9kb3Mud2ltLmNvbSJ9.n5JLDQ0DA43Q4tkOIhPRVDmzQDDWVotignoYtveGOUA",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }

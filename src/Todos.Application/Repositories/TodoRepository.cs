@@ -19,8 +19,8 @@ public class TodoRepository : ITodoRepository
 
         var result = await connection.ExecuteAsync(
             new CommandDefinition($"""
-                                   insert into todos (id, description)
-                                   values (@Id, @Description)
+                                   insert into todos (id, userid, description)
+                                   values (@Id, @UserId, @Description)
                                    """, todo, cancellationToken: token));
 
         return result > 0;
@@ -49,6 +49,25 @@ public class TodoRepository : ITodoRepository
         return result.Select(t => new Todo
         {
             Id = t.Id,
+            UserId = t.UserId,
+            Description = t.Description,
+            CompletedOn = t.CompletedOn
+        });
+    }
+
+    public async Task<IEnumerable<Todo>> GetAllMineAsync(Guid? userId = default, CancellationToken token = default)
+    {
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync(token);
+        
+        var result = await connection.QueryAsync<Todo>(
+            new CommandDefinition($"""
+                                   select * from todos where userid = @UserId
+                                   """, new { userId }, cancellationToken: token));
+
+        return result.Select(t => new Todo
+        {
+            Id = t.Id,
+            UserId = t.UserId,
             Description = t.Description,
             CompletedOn = t.CompletedOn
         });

@@ -6,20 +6,22 @@ namespace Todos.Api.Mapping;
 
 public static class ContractMapping
 {
-    public static Todo MapToTodo(this CreateTodoRequest request)
+    public static Todo MapToTodo(this CreateTodoRequest request, Guid userId)
     {
         return new Todo
         {
             Id = Guid.NewGuid(),
+            UserId = userId,
             Description = request.Description
         };
     }
     
-    public static Todo MapToTodo(this UpdateTodoRequest request, Guid id)
+    public static Todo MapToTodo(this UpdateTodoRequest request, Guid id, Guid userId)
     {
         return new Todo
         {
             Id = id,
+            UserId = userId,
             Description = request.Description,
             CompletedOn = request.CompletedOn
         };
@@ -30,6 +32,7 @@ public static class ContractMapping
         return new TodoResponse
         {
             Id = todo.Id,
+            UserId = todo.UserId,
             Description = todo.Description,
             CompletedOn = todo.CompletedOn,
             Completed = todo.Completed

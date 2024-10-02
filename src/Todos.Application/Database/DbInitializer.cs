@@ -18,6 +18,7 @@ public class DbInitializer
         await connection.ExecuteAsync($"""
                                        create table if not exists todos (
                                            id UUID primary key,
+                                           userid uuid,
                                            description text not null,
                                            completedOn timestamp null,
                                            completed boolean not null default false);

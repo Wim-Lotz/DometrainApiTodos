@@ -33,6 +33,11 @@ public sealed class TodoService : ITodoService
         return _todoRepository.GetAllAsync(token);
     }
 
+    public Task<IEnumerable<Todo>> GetAllMineAsync(Guid userId = default, CancellationToken token = default)
+    {
+        return _todoRepository.GetAllMineAsync(userId, token);
+    }
+
     public async Task<Todo?> UpdateAsync(Todo todo, CancellationToken token = default)
     {
         await _todoValidator.ValidateAndThrowAsync(todo, cancellationToken: token);
