@@ -10,7 +10,7 @@ public interface ITodoService
     
     Task<IEnumerable<Todo>> GetAllAsync(CancellationToken token = default);
     
-    Task<IEnumerable<Todo>> GetAllMineAsync(Guid userId = default, CancellationToken token = default);
+    Task<IEnumerable<Todo>> GetAllMineAsync(GetAllTodosOptions options, CancellationToken token = default);
     
     Task<Todo?> UpdateAsync(Todo todo, CancellationToken token = default);
     

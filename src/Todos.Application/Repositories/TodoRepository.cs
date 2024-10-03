@@ -55,14 +55,27 @@ public class TodoRepository : ITodoRepository
         });
     }
 
-    public async Task<IEnumerable<Todo>> GetAllMineAsync(Guid? userId = default, CancellationToken token = default)
+    public async Task<IEnumerable<Todo>> GetAllMineAsync(GetAllTodosOptions options, CancellationToken token = default)
     {
         using var connection = await _dbConnectionFactory.CreateConnectionAsync(token);
+
+        var orderClause = string.Empty;
+        if (options.SortField is not null)
+        {
+            orderClause = $"""
+            order by {options.SortField} {(options.SortOrder == SortOrder.Ascending ? "asc" : "desc")}
+            """;
+        }
         
         var result = await connection.QueryAsync<Todo>(
             new CommandDefinition($"""
-                                   select * from todos where userid = @UserId
-                                   """, new { userId }, cancellationToken: token));
+                                   select * from todos where (userid = @UserId and description like ( '%' || @Description|| '%'))
+                                   {orderClause}
+                                   """, new
+            {
+                userId = options.UserId, 
+                description = options.Description
+            }, cancellationToken: token));
 
         return result.Select(t => new Todo
         {

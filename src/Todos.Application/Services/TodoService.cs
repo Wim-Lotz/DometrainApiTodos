@@ -10,11 +10,13 @@ public sealed class TodoService : ITodoService
 {
     private readonly ITodoRepository _todoRepository;
     private readonly TodoValidator _todoValidator;
+    private readonly GetAllTodosOptionsValidator _optionsValidator;
 
-    public TodoService(ITodoRepository todoRepository, TodoValidator todoValidator)
+    public TodoService(ITodoRepository todoRepository, TodoValidator todoValidator, GetAllTodosOptionsValidator optionsValidator)
     {
         _todoRepository = todoRepository;
         _todoValidator = todoValidator;
+        _optionsValidator = optionsValidator;
     }
 
     public async Task<bool> CreateAsync(Todo todo, CancellationToken token = default)
@@ -33,9 +35,11 @@ public sealed class TodoService : ITodoService
         return _todoRepository.GetAllAsync(token);
     }
 
-    public Task<IEnumerable<Todo>> GetAllMineAsync(Guid userId = default, CancellationToken token = default)
+    public async Task<IEnumerable<Todo>> GetAllMineAsync(GetAllTodosOptions options, CancellationToken token = default)
     {
-        return _todoRepository.GetAllMineAsync(userId, token);
+        await _optionsValidator.ValidateAndThrowAsync(options, cancellationToken: token);
+        
+        return await _todoRepository.GetAllMineAsync(options, token);
     }
 
     public async Task<Todo?> UpdateAsync(Todo todo, CancellationToken token = default)

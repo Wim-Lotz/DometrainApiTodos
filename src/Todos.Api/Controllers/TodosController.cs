@@ -44,7 +44,7 @@ public class TodosController : ControllerBase
 
     [Authorize]
     [HttpGet(ApiEndpoints.Todos.GetAll)]
-    public async Task<IActionResult> GetAll(CancellationToken token)
+    public async Task<IActionResult> GetAll([FromQuery] GetAllTodosRequest request, CancellationToken token)
     {
         var todos = await _todoService.GetAllAsync(token);
 
@@ -54,11 +54,12 @@ public class TodosController : ControllerBase
     
     [Authorize(AuthConstants.TrustedMemberPolicyName)]
     [HttpGet(ApiEndpoints.Todos.GetMyTodos)]
-    public async Task<IActionResult> GetAllMine(CancellationToken token)
+    public async Task<IActionResult> GetAllMine([FromQuery] GetAllTodosRequest request, CancellationToken token)
     {
         var userId = HttpContext.GetUserId();
+        var options = request.MapToOptions().WithUser(userId);
         
-        var todos = await _todoService.GetAllMineAsync(userId!.Value, token);
+        var todos = await _todoService.GetAllMineAsync(options, token);
 
         var response = todos.MapToResponse();
         return Ok(response);

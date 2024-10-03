@@ -46,4 +46,21 @@ public static class ContractMapping
             Items = todos.Select(MapToResponse)
         };
     }
+
+    public static GetAllTodosOptions MapToOptions(this GetAllTodosRequest request)
+    {
+        return new GetAllTodosOptions
+        {
+            Description = request.Description,
+            SortField = request.SortBy?.Trim('+','-'),
+            SortOrder = request.SortBy is null ? SortOrder.Unsorted:
+                request.SortBy.StartsWith('-') ? SortOrder.Descending : SortOrder.Ascending,
+        };
+    }
+
+    public static GetAllTodosOptions WithUser(this GetAllTodosOptions options, Guid? userId)
+    {
+         options.UserId = userId;
+         return options;
+    }
 }
