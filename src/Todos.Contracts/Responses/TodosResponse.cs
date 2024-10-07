@@ -1,6 +1,6 @@
 ﻿namespace Todos.Contracts.Responses;
 
-public record TodosResponse
+public class TodosResponse : PagedResponse<TodoResponse>
 {
-    public IEnumerable<TodoResponse> Items { get; init; } = [];
+    
 }

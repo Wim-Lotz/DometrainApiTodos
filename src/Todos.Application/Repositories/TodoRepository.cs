@@ -69,12 +69,17 @@ public class TodoRepository : ITodoRepository
         
         var result = await connection.QueryAsync<Todo>(
             new CommandDefinition($"""
-                                   select * from todos where (userid = @UserId and description like ( '%' || @Description|| '%'))
-                                   {orderClause}
+                                   select * from todos where (userid = @userId) and 
+                                   (@description is null or description like ( '%' || @description|| '%'))
+                                   {orderClause} 
+                                   limit @pageSize 
+                                   offset @pageOffset
                                    """, new
             {
                 userId = options.UserId, 
-                description = options.Description
+                description = options.Description,
+                pageSize = options.PageSize,
+                pageOffset =  (options.Page - 1) * options.PageSize
             }, cancellationToken: token));
 
         return result.Select(t => new Todo

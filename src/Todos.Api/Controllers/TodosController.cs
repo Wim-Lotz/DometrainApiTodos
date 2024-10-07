@@ -42,15 +42,15 @@ public class TodosController : ControllerBase
         return Ok(response);
     }
 
-    [Authorize]
-    [HttpGet(ApiEndpoints.Todos.GetAll)]
-    public async Task<IActionResult> GetAll([FromQuery] GetAllTodosRequest request, CancellationToken token)
-    {
-        var todos = await _todoService.GetAllAsync(token);
-
-        var response = todos.MapToResponse();
-        return Ok(response);
-    }
+    // [Authorize]
+    // [HttpGet(ApiEndpoints.Todos.GetAll)]
+    // public async Task<IActionResult> GetAll([FromQuery] GetAllTodosRequest request, CancellationToken token)
+    // {
+    //     var todos = await _todoService.GetAllAsync(token);
+    //
+    //     var response = todos.MapToResponse();
+    //     return Ok(response);
+    // }
     
     [Authorize(AuthConstants.TrustedMemberPolicyName)]
     [HttpGet(ApiEndpoints.Todos.GetMyTodos)]
@@ -61,7 +61,7 @@ public class TodosController : ControllerBase
         
         var todos = await _todoService.GetAllMineAsync(options, token);
 
-        var response = todos.MapToResponse();
+        var response = todos.MapToResponse(request.Page, request.PageSize);
         return Ok(response);
     }
 

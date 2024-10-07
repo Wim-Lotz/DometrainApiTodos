@@ -39,11 +39,13 @@ public static class ContractMapping
         };
     }
 
-    public static TodosResponse MapToResponse(this IEnumerable<Todo> todos)
+    public static TodosResponse MapToResponse(this IEnumerable<Todo> todos, int page, int pageSize)
     {
         return new TodosResponse
         {
-            Items = todos.Select(MapToResponse)
+            Items = todos.Select(MapToResponse),
+            Page = page,
+            PageSize = pageSize
         };
     }
 
@@ -55,6 +57,8 @@ public static class ContractMapping
             SortField = request.SortBy?.Trim('+','-'),
             SortOrder = request.SortBy is null ? SortOrder.Unsorted:
                 request.SortBy.StartsWith('-') ? SortOrder.Descending : SortOrder.Ascending,
+            Page = request.Page,
+            PageSize = request.PageSize
         };
     }
 
